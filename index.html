@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+   <!-- Fontawesome -->
+   <script src="https://kit.fontawesome.com/5d0f223ffb.js" crossorigin="anonymous"></script>
+
+
+    <style>
+
+
+        #main{
+            margin-top: 25px;
+            padding: 20px;
+            border: 2px solid gray;
+            width: 100%;
+        }
+
+        #textButton{
+            width: 20%;
+            margin-left: 20px;
+            margin-bottom: 4px;
+        }
+
+        #canvas{
+            width: 100%;
+        }
+    </style>
+
+    <title>Certificate</title>
+</head>
+<body onload="uploadCertificate()">
+
+    <div class="container">
+        <div class="col-8" style="margin: 0 auto;">
+            <div class="row">
+                <div id="main">
+                    <form>
+                        <input type="text" class="form-control w-75" id="userTextBox" style="display: inline-block; text-align: center;" placeholder="Write your name">
+                        <button type="button" class="btn btn-primary" id="textButton" onclick="addText()">Submit</button>
+                    </form>
+                    <hr>
+                    <canvas id="canvas"></canvas>
+                    <hr>
+                    <button id="downloadBtn"  href="" class="btn btn-success btn-block">Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    const canvas = document.getElementById('canvas');
+    let img1 = new Image();
+    const imageFile = "certificate.png";
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    function uploadCertificate() {
+        if (canvas.getContext) {
+
+            ctx = canvas.getContext('2d');
+
+            //Loading of the home test image - img1
+            //let img1 = new Image(); GLOBAL
+
+            //drawing of the test image - img1
+            img1.onload = function () {
+                canvas.width = img1.width ;
+                canvas.height = img1.height ;
+                
+
+                //draw background image
+                ctx.drawImage(img1, 0, 0, img1.width, img1.height,
+                0, 0, canvas.width, canvas.height);
+            
+            };
+            //img1.setAttribute('crossorigin', 'anonymous'); // works for me
+            img1.src = imageFile;
+        }
+    }
+
+    function addText() {
+        let ctx = canvas.getContext('2d');
+
+        let userName = document.getElementById("userTextBox").value;
+
+        //to center the text, calculating apprmox width for each character in the string
+        let alignCenter = 0;
+        for (let i = 0; i < userName.length; i++) {
+            alignCenter += 15;
+        }
+
+        ctx.font = "60px Arial";
+        ctx.fillText(userName,img1.width/2 - alignCenter,img1.height/2 + 30 );
+    }
+   
+
+    downloadBtn.addEventListener('click', () => {
+        downloadImage();
+    });
+
+   
+
+   function downloadImage(){
+     //init event
+     let e;
+    //create link
+    const link = document.createElement('a');
+
+    //set props
+    link.download = "new-certificate.jpg";
+    link.href = canvas.toDataURL('img/jpg');
+    //new mouse event
+    e = new MouseEvent('click');
+    //dispatch event
+    link.dispatchEvent(e);
+   }
+    </script>
+
+</body>
+</html>
